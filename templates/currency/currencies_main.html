@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} {{ currency }} {% endblock %}
+
+{% block body %}
+    {% for currency,amount in owned_currency.items %}
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">{{currency}}</h5>
+            <p class="card-text">You own {{amount}}</p>
+            <a href="{% url 'display_for_currency' currency %}" class="btn btn-primary">Exchange</a>
+              <a href="{% url 'display_for_currency' currency %}" class="btn btn-primary">Details</a>
+
+          </div>
+        </div>
+        {% endfor %}
+
+
+{% endblock %}

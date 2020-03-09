@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% block title %}Zaloguj się {% endblock %}
+{% block jtron %}
+<h1>Login required</h1>
+{% endblock %}
+
+
+{% block body %}
+<div class="card" style="width: 600px;">
+  <div class="card-body">
+    <h5 class="card-title">Zaloguj się</h5>
+    <form method="post" role="form" >
+    {% csrf_token %}
+    {{form|bootstrap}}
+    <button type="submit" class="btn btn-primary"><i class="fas fa-greater-than"></i> Log in</button>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} {{ currency }} {% endblock %}
+
+{% block body %}
+<h2>To jest strona dla {{ currency }}</h2>
+<div class="container">
+      {% for key,value in rates.items %}
+<div class="col-md-4">
+<div class="card" id="a" style="width: 18rem;">
+          <p>{{key}} : {{value}}</p>
+  <div class="card-body">
+       <a href="{% url 'currency_exchange' currency key %}">wymien</a>
+  </div>
+</div>
+  </div>
+    {% endfor %}
+</div>
+{% endblock %}

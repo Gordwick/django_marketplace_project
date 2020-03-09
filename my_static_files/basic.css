@@ -1,0 +1,22 @@
+.fa-angle-down{
+color:#B53471;
+}
+
+.fa-angle-up{
+color:green;
+}
+
+footer{
+	position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: small;
+    height: auto;
+    background-color: gray;
+    color: antiquewhite;
+	text-align:right;
+	padding-right:10px;
+}
+article{
+margin-bottom:100px;
+}

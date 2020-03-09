@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %} {{ currency }} {% endblock %}
+
+{% block body %}
+<input type="hidden" id="ow" name="variable" value="{{ owned }}">
+<input type="hidden" id="ne" name="variable" value="{{ needed }}">
+<h2>Wymiana {{ owned }} na {{ needed }} :
+    {% if percentage > 0 %}
+        <i class="fa fa-angle-up"></i>
+    {% elif percentage < 0 %}
+        <i class="fa fa-angle-down"></i>
+   {% else %}
+
+   {% endif %}
+    {{ percentage }}% (this week)</h2>
+    <p>(4% fee from the transaction)</p>
+
+<form method="POST">
+    {% csrf_token %}
+    {{exchange_form}}
+    <button type="submit" class="btn btn-primary"><i class="fas fa-greater-than"></i> Submit</button>
+</form>
+
+
+
+{% endblock %}
