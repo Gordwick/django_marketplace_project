@@ -1,34 +1,58 @@
 from django.shortcuts import render, redirect
-from .forms import User_Currency_owned_Form,UserForm
+from .forms import UserCurrencyOwnedForm, UserForm
+from rest_framework.views import APIView
+from django.http import HttpResponseBadRequest
+from currency.models import CurrencyOwned
+import traceback
+from django.contrib.auth.models import User
+from currency.serializers import UserSerializer
 
 
-def main_page(request):
-    return render(request, 'Main/main_page.html')
+class MainPage(APIView):
+
+    def get(self, request):
+        return render(request, 'Main/main_page.html')
 
 
-def registration_page(request):
+class RegistrationPage(APIView):
 
-    registered = False
+    def post(self, request):
+        level_map = {1: {'EUR': 10000}, 2: {'GBP': 5000}, 3: {'PLN': 1000}}
+        level = level_map[int(request.data['level'])]
 
-    if request.method == "POST":
-        user_form = UserForm(data=request.POST)
-        currency_form = User_Currency_owned_Form(data=request.POST)
+        def validate_level(level):
+            return True if int(level) in [1, 2, 3] else False
 
-        if user_form.is_valid() and currency_form.is_valid():
-            user = user_form.save()
-            user.set_password(user.password)     #hashing password
-            user.save()
+        registered = False
 
-            currency = currency_form.save(commit=False)
-            currency.user = user
-            currency.save()
-            registered = True
-        else:
-            print(user_form.errors, currency_form.error_class)
-    else:
+        try:
+            print(request.data)
+            user_serializer = UserSerializer(data=request.data)
+            user_serializer.is_valid()# TODO: check if email already in the database
+            user_object = user_serializer.save()
+            # user_data = {
+            #     'username': request.data['username'],
+            #     'email': request.data['email'],
+            #     'password': request.data['password']
+            # }
+            # user_object = UserForm(user_data)
+            # user_object.is_valid()
+            # user_object = user_object.save()
+            if validate_level(request.data['level']):
+                currency = CurrencyOwned(user=user_object, **level)
+                currency.save()
+            else:
+                raise Exception('Wrong level set')
+
+        except Exception as e:  # TODo : create actual page
+            print(traceback.format_exc())
+            return HttpResponseBadRequest()
+
+        return render(request, 'registration/register.html', {'registered': registered})
+
+    def get(self, request):
         user_form = UserForm()
-        currency_form = User_Currency_owned_Form()
 
-    return render(request, 'registration/register.html', {'registered': registered,
-                                                          'user_form': user_form,
-                                                          'currency_form': currency_form})
+        return render(request, 'registration/register.html', {'registered': False,
+                                                              'user_form': user_form
+                                                              })
