@@ -18,7 +18,8 @@ class CurrencyExchangeModel(models.Model):
     def __str__(self):
         return "" + self.user.username + "  " + str(self.date) + ""
 
-class Currency_owned(models.Model):
+
+class CurrencyOwned(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # additional fields

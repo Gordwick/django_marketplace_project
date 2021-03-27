@@ -1,0 +1,5 @@
+django
+django-bootstrap-form
+djangorestframework
+psycopg2
+forex-python

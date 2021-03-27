@@ -3,13 +3,12 @@ from django.contrib.auth.decorators import login_required
 from forex_python.converter import CurrencyRates
 from forex_python.converter import get_rate
 from datetime import datetime, timedelta
-from .models import Currency_owned, CurrencyExchangeModel
+from .models import CurrencyOwned, CurrencyExchangeModel
 from .forms import ExchangeForm
 from django.http import HttpResponse
 import decimal as d
 from django.db import connection
 from django.http import Http404
-
 
 
 def display_for_currency(request, name="USD"):
@@ -19,13 +18,13 @@ def display_for_currency(request, name="USD"):
 
 
 @login_required
-def display_all_currencies(request):
+def display_all_currencies(request):  # TODO: what if none owned money - investigate if error
     c = CurrencyRates()
     c = c.get_rates('USD')
     l = []
     for el, el2 in c.items():
         l.append(el)
-    users_data = list(Currency_owned.objects.values().filter(user=request.user))
+    users_data = list(CurrencyOwned.objects.values().filter(user=request.user))
     owned_currency = users_data[0]
     owned_currency.pop('id')
     owned_currency.pop('user_id')
@@ -39,7 +38,7 @@ def currency_exchange(request, owned, needed):
     now = get_rate(owned, needed, datetime_object)
     then = get_rate(owned, needed, datetime_week_old)
 
-    percentage = int((now-then)*10000)/100
+    percentage = int((now - then) * 10000) / 100
 
     if request.method == "POST":
         exchange_form = ExchangeForm(data=request.POST)
@@ -59,7 +58,7 @@ def currency_exchange(request, owned, needed):
 
             # exchange
 
-            usr = get_object_or_404(Currency_owned, user=request.user)
+            usr = get_object_or_404(CurrencyOwned, user=request.user)
             owned_client = 'SELECT c."{}" FROM currency_currency_owned as c WHERE user_id={};'.format(
                 obj.exchanged_currency, usr.user_id)
             needed_client = 'SELECT c."{}" FROM currency_currency_owned as c WHERE user_id={};'.format(
@@ -96,13 +95,5 @@ def currency_exchange(request, owned, needed):
                'owned': owned,
                'needed': needed,
                'percentage': percentage,
-                   }
+               }
     return render(request, 'currency/exchange_panel.html', context)
-
-
-
-
-
-
-
-
