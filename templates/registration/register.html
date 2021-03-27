@@ -9,8 +9,24 @@
     <form method="post">
         {% csrf_token %}
         {{ user_form.as_p }}
-        {{ currency_form.as_p }}
-        <input type="submit" name="" value="Register">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <input type="radio" class="btn-check" name="level" id="option1" autocomplete="off" value="1">
+            <label class="btn btn-secondary" for="option1">Easy - 10000 EUR</label>
+
+            <input type="radio" class="btn-check" name="level" id="option2" autocomplete="off" value="2">
+            <label class="btn btn-secondary" for="option2">Normal - 5000 GBP</label>
+
+            <input type="radio" class="btn-check" name="level" id="option3" autocomplete="off" value="3">
+            <label class="btn btn-secondary" for="option3">Hard - 1000 PLN</label>
+        </div>
+        <br>
+        <br>
+        <input type="submit" name="" value="Register" id="submitButton">
     </form>
 {% endif %}
+{% endblock %}
+{% block scripts %}
+<script>
+
+</script>
 {% endblock %}
