@@ -19,15 +19,20 @@ def display_for_currency(request, name="USD"):
 
 @login_required
 def display_all_currencies(request):  # TODO: what if none owned money - investigate if error
-    c = CurrencyRates()
-    c = c.get_rates('USD')
-    l = []
-    for el, el2 in c.items():
-        l.append(el)
-    users_data = list(CurrencyOwned.objects.values().filter(user=request.user))
-    owned_currency = users_data[0]
-    owned_currency.pop('id')
-    owned_currency.pop('user_id')
+    try:
+        # c = CurrencyRates()
+        # c = c.get_rates('USD')
+        # l = []
+        # for el, el2 in c.items():
+        #     l.append(el)
+        users_data = list(CurrencyOwned.objects.values().filter(user=request.user))
+        owned_currency = users_data[0]
+        owned_currency.pop('id')
+        owned_currency.pop('user_id')
+    except ConnectionError:
+        return render(request, 'currency/currencies_main.html', {'owned_currency': []})
+    except IndexError:#TODO: customize for when the user has no credits
+        return render(request, 'currency/currencies_main.html', {'owned_currency': []})
     return render(request, 'currency/currencies_main.html', {'owned_currency': owned_currency})
 
 
