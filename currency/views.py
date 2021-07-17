@@ -1,7 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from forex_python.converter import CurrencyRates
-from forex_python.converter import get_rate
+from forex_python.converter import CurrencyRates, get_rate
 from datetime import datetime, timedelta
 from .models import CurrencyOwned, CurrencyExchangeModel
 from .forms import ExchangeForm
@@ -18,7 +17,7 @@ def display_for_currency(request, name="USD"):
 
 
 @login_required
-def display_all_currencies(request):  # TODO: what if none owned money - investigate if error
+def display_all_currencies(request):
     try:
         # c = CurrencyRates()
         # c = c.get_rates('USD')
@@ -64,7 +63,7 @@ def currency_exchange(request, owned, needed):
             # exchange
 
             usr = get_object_or_404(CurrencyOwned, user=request.user)
-            owned_client = 'SELECT c."{}" FROM currency_currency_owned as c WHERE user_id={};'.format(
+            owned_client = 'SELECT c."{}" FROM currency_currency_owned as c WHERE user_id={};'.format( #TODO: check for more secure handling
                 obj.exchanged_currency, usr.user_id)
             needed_client = 'SELECT c."{}" FROM currency_currency_owned as c WHERE user_id={};'.format(
                 obj.acquired_currency, usr.user_id)

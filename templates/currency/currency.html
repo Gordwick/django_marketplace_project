@@ -2,17 +2,36 @@
 {% block title %} {{ currency }} {% endblock %}
 
 {% block body %}
-<h2>To jest strona dla {{ currency }}</h2>
+<h2>To jest strona dla {{ currency }}</h2><br>
+
 <div class="container">
+    <h4>Zmien walute</h4>
+    <select id="myCurrSelect" class="form-select">
+          <option selected value={{ currency }}>{{ currency }}</option>
+        {% for key,value in rates.items %}
+          <option value={{ key }}>{{ key }}</option>
+        {% endfor %}
+    </select>
+    <button class="btn btn-primary btn-lg" onclick=change_currency()>Zmien</button>
       {% for key,value in rates.items %}
-<div class="col-md-4">
-<div class="card" id="a" style="width: 18rem;">
-          <p>{{key}} : {{value}}</p>
-  <div class="card-body">
-       <a href="{% url 'currency_exchange' currency key %}">wymien</a>
-  </div>
-</div>
-  </div>
+    <div class="col-md-4">
+        <div class="card" id="a" style="width: 18rem;">
+                  <p>{{key}} : {{value}}</p>
+              <div class="card-body">
+                   <a href="{% url 'currency_exchange' currency key %}">Wymiana</a>
+              </div>
+        </div>
+     </div>
     {% endfor %}
 </div>
+{% endblock %}
+{% block scripts %}
+<script>
+
+    let change_currency = () => {
+        let mySelectValue = document.getElementById("myCurrSelect").value;
+        window.location.href = "{% url 'display_for_currency' name=12345 %}".replace(/12345/, mySelectValue.toString());
+    }
+
+</script>
 {% endblock %}

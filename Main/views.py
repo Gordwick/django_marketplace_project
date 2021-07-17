@@ -46,7 +46,6 @@ class RegistrationPage(APIView):
                 raise Exception('Input not valid')
 
         except Exception as e:  # TODo : create actual page
-
             if user_object:
                 user_object.delete()
 
